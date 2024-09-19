@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiaPlus AI ROI Calculator</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            margin: 25px;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            min-height: 95vh;
+        }
+        .calculator {
+            max-width: 1200px;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 70px  !important;
+            padding: 30px;
+            position: relative;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 50px;
+        }
+        .heading{
+            font-size: 20px !important;
+            font-weight: bolder !important;
+            margin-bottom: 15px !important ;
+            font-family: Arial, sans-serif !important;
+        }
+
+        .calculator-grid {
+            display: grid;
+            gap: 20px;
+        }
+        .section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-bottom: 15px;
+            color: #444;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .result {
+            font-size: 16px;
+            color: #4a90e2;
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .result-label {
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+        .result-value {
+            font-weight: bolder;
+            font-size: 20px;
+        }
+        .country-selector {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            display: flex;
+            margin-top: 20px;
+            margin-right: 40px !important;
+            /* align-items: center; */
+        }
+        .country-selector label {
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .country-selector select {
+            width: auto;
+            margin-bottom: 0;
+        }
+        .globe-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+            margin-bottom: 10px;
+        }
+        .tooltip::after {
+            content: "ⓘ";
+            margin-left: 3px;
+            color: #3791f8;
+            font-size: 0.7em;
+            vertical-align: super;
+        }
+        .tooltipTitle
+        {
+            font-size: 14px !important;
+            font-weight: 120  !important;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #f8f8f8;
+            color: #333;
+            text-align: center;
+            border-radius: 4px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9em;
+            line-height: 1.4;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        #volume-discount-message {
+            grid-column: 1 / -1;
+            background-color: #e6f3ff;
+            border: 1px solid #4a90e2;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            color: #333;
+            display: none;
+        }
+        .readonly-text {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        @media (min-width: 768px) {
+            .calculator-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .calculator-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .country-selector {
+                position: static;
+                justify-content: flex-end;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="country-selector">
+        <label for="country">
+            <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            Country:
+        </label>
+        <select id="country">
+            <option value="us">US</option>
+            <option value="india">India</option>
+            <option value="south-africa">South Africa</option>
+        </select>
+    </div>
+    <div class="calculator">
+        <h1>LiaPlus AI ROI Calculator</h1>
+        <div class="calculator-grid">
+            <div class="section">
+                <h2 class="tooltip"><span class="heading">1. Pre-LiaPlus AI</span>
+                    <span class="tooltiptext tooltipTitle">"Pre-LiaPlus AI" refers to the manual customer support processes before using LiaPlus AI</span>
+                </h2>
+                <label for="monthly-costs">Monthly Customer Service Costs (<span class="currency">$</span>)</label>
+                <input type="number" id="monthly-costs" value="100000">
+                <label for="monthly-calls">Monthly Calls</label>
+                <select id="monthly-calls">
+                    <option value="1000">1,000</option>
+                    <option value="5000">5,000</option>
+                    <option value="10000">10,000</option>
+                    <option value="15000" selected>15,000</option>
+                    <option value="50000">50,000</option>
+                    <option value="100000">100,000</option>
+                    <option value="500000">500,000</option>
+                    <option value="1000000">1,000,000</option>
+                </select>
+                <div class="result" id="avg-call-cost">
+                    <span class="result-label">Avg. Call Cost : </span>
+                    <span class="result-value">$6.67</span>
+                </div>
+            </div>
+            <div class="section">
+                <h2><span class="heading">2. With LiaPlus AI</span></h2>
+                <label for="ai-conversations"># of monthly AI conversations</label>
+                <div id="ai-conversations" class="readonly-text">15,000</div>
+                <label for="fcr" class="tooltip">FCR (First Contact Resolution)
+                    <span class="tooltiptext">First Call Resolution (FCR) measures how successfully a customer's issue is resolved on their first contact with support, without needing follow-up. It reflects efficiency and customer satisfaction.</span>
+                </label>
+                <select id="fcr">
+                    <option value="10">10%</option>
+                    <option value="20">20%</option>
+                    <option value="30">30%</option>
+                    <option value="40">40%</option>
+                    <option value="50" selected>50%</option>
+                    <option value="60">60%</option>
+                    <option value="70">70%</option>
+                    <option value="80">80%</option>
+                </select>
+                <div class="result" id="savings-with-ai">
+                    <span class="result-label">Savings / Month with AI : </span>
+                    <span class="result-value">$50,000.00</span>
+                </div>
+            </div>
+            <div class="section">
+                <h2><span class="heading">3. LiaPlus AI ROI</span></h2>
+                <label for="avg-call-cost-select">Average Call Cost (<span class="currency">$</span>)</label>
+                <select id="avg-call-cost-select">
+                    <option value="0.08" selected>0.08</option>
+                    <option value="0.10">0.10</option>
+                    <option value="0.15">0.15</option>
+                </select>
+                <label for="monthly-liaplus-ai-cost">Monthly Liaplus AI Cost (<span class="currency">$</span>)</label>
+                <div id="monthly-liaplus-ai-cost" class="readonly-text">1,200.00</div>
+                <div class="result" id="monthly-liaplus-ai-roi">
+                    <span class="result-label">Monthly Liaplus AI ROI : </span>
+                    <span class="result-value">4,066.67%</span>
+                </div>
+            </div>
+        </div>
+        <div id="volume-discount-message">
+            For inquiries regarding volume discounts, please contact our customer support team at hello@liaplus.com.
+        </div>
+    </div>
+
+    <script>
+        const exchangeRates = {
+            'us': 1,
+            'india': 82.5,
+            'south-africa': 18.5
+        };
+
+        const currencySymbols = {
+            'us': '$',
+            'india': '₹',
+            'south-africa': 'R'
+        };
+
+        function updateCurrency() {
+            const country = document.getElementById('country').value;
+            const currencySymbol = currencySymbols[country];
+            document.querySelectorAll('.currency').forEach(el => el.textContent = currencySymbol);
+            updateAICallCostOptions();
+            calculateAvgCallCost();
+        }
+
+        function convertCurrency(amount, toCountry) {
+            const rate = exchangeRates[toCountry];
+            return amount * rate;
+        }
+
+        function formatCurrency(amount, country) {
+            const symbol = currencySymbols[country];
+            return `${symbol}${amount.toFixed(2)}`;
+        }
+
+        function updateAICallCostOptions() {
+            const country = document.getElementById('country').value;
+            const select = document.getElementById('avg-call-cost-select');
+            const baseCosts = [0.08, 0.10, 0.15];
+            
+            select.innerHTML = '';
+            baseCosts.forEach(cost => {
+                const convertedCost = convertCurrency(cost, country);
+                const option = document.createElement('option');
+                option.value = cost;
+                option.textContent = convertedCost.toFixed(2);
+                select.appendChild(option);
+            });
+        }
+
+        function calculateAvgCallCost() {
+            const country = document.getElementById('country').value;
+            const monthlyCosts = parseFloat(document.getElementById('monthly-costs').value);
+            const monthlyCalls = parseFloat(document.getElementById('monthly-calls').value);
+            
+            if (monthlyCalls > 0) {
+                const avgCallCost = monthlyCosts / monthlyCalls;
+                const convertedAvgCallCost = convertCurrency(avgCallCost, country);
+                document.querySelector('#avg-call-cost .result-value').textContent = formatCurrency(convertedAvgCallCost, country);
+            } else {
+                document.querySelector('#avg-call-cost .result-value').textContent = 'N/A';
+            }
+
+            updateAIConversations();
+            calculateSavings();
+            checkVolumeDiscount(monthlyCalls);
+        }
+
+        function updateAIConversations() {
+            const monthlyCalls = document.getElementById('monthly-calls').value;
+            document.getElementById('ai-conversations').textContent = Number(monthlyCalls).toLocaleString();
+        }
+
+        function calculateSavings() {
+            const country = document.getElementById('country').value;
+            const monthlyCosts = parseFloat(document.getElementById('monthly-costs').value);
+            const fcr = parseFloat(document.getElementById('fcr').value) / 100;
+            const savings = fcr * monthlyCosts;
+            const convertedSavings = convertCurrency(savings, country);
+            document.querySelector('#savings-with-ai .result-value').textContent = formatCurrency(convertedSavings, country);
+
+            calculateROI(savings);
+        }
+
+        function calculateROI(savings) {
+            const country = document.getElementById('country').value;
+            const avgCallCost = parseFloat(document.getElementById('avg-call-cost-select').value);
+            const monthlyCalls = parseFloat(document.getElementById('monthly-calls').value);
+            const monthlyLiaplusAICost = avgCallCost * monthlyCalls;
+            const convertedMonthlyLiaplusAICost = convertCurrency(monthlyLiaplusAICost, country);
+            document.getElementById('monthly-liaplus-ai-cost').textContent = formatCurrency(convertedMonthlyLiaplusAICost, country);
+
+            const roi = ((savings - monthlyLiaplusAICost) / monthlyLiaplusAICost) * 100;
+            document.querySelector('#monthly-liaplus-ai-roi .result-value').textContent = `${roi.toFixed(2)}%`;
+        }
+
+        function checkVolumeDiscount(monthlyCalls) {
+            const messageElement = document.getElementById('volume-discount-message');
+            if (monthlyCalls > 100000) {
+                messageElement.style.display = 'block';
+            } else {
+                messageElement.style.display = 'none';
+            }
+        }
+
+        document.getElementById('country').addEventListener('change', updateCurrency);
+        document.getElementById('monthly-costs').addEventListener('input', calculateAvgCallCost);
+        document.getElementById('monthly-calls').addEventListener('change', calculateAvgCallCost);
+        document.getElementById('fcr').addEventListener('change', calculateSavings);
+        document.getElementById('avg-call-cost-select').addEventListener('change', calculateSavings);
+
+        // Initial calculations
+        updateCurrency();
+        calculateAvgCallCost();
+        updateAIConversations();
+        calculateSavings();
+
+        // Tooltip functionality
+        function initTooltips() {
+            const tooltips = document.querySelectorAll('.tooltip');
+            tooltips.forEach(tooltip => {
+                tooltip.setAttribute('tabindex', '0');
+                tooltip.addEventListener('focus', () => {
+                    tooltip.querySelector('.tooltiptext').style.visibility = 'visible';
+                    tooltip.querySelector('.tooltiptext').style.opacity = '1';
+                });
+                tooltip.addEventListener('blur', () => {
+                    tooltip.querySelectortooltip.querySelector('.tooltiptext').style.visibility = 'hidden';
+                    tooltip.querySelector('.tooltiptext').style.opacity = '0';
+                });
+            });
+        }
+
+        // Call initTooltips after the page loads
+        document.addEventListener('DOMContentLoaded', initTooltips);
+    </script>
+</body>
+</html>
