@@ -11,18 +11,15 @@
             padding: 0;
         }
         body {
-            margin: 25px;
+            margin: 20px;
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
             min-height: 95vh;
         }
         .calculator {
             max-width: 1200px;
-            margin-top: 30px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-bottom: 70px  !important;
-            padding: 30px;
+            margin: 5px auto 70px;
+            padding: 5px;
             position: relative;
         }
         h1 {
@@ -30,13 +27,12 @@
             color: #333;
             margin-bottom: 50px;
         }
-        .heading{
+        .heading {
             font-size: 20px !important;
             font-weight: bolder !important;
-            margin-bottom: 15px !important ;
+            margin-bottom: 15px !important;
             font-family: Arial, sans-serif !important;
         }
-
         .calculator-grid {
             display: grid;
             gap: 20px;
@@ -81,13 +77,11 @@
             font-size: 20px;
         }
         .country-selector {
-            position: absolute;
-            top: 2px;
-            right: 2px;
+            position: relative;
             display: flex;
-            margin-top: 20px;
-            margin-right: 40px !important;
-            /* align-items: center; */
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            z-index: 1000;
         }
         .country-selector label {
             margin-right: 10px;
@@ -116,10 +110,9 @@
             font-size: 0.7em;
             vertical-align: super;
         }
-        .tooltipTitle
-        {
+        .tooltipTitle {
             font-size: 14px !important;
-            font-weight: 120  !important;
+            font-weight: 120 !important;
         }
         .tooltip .tooltiptext {
             visibility: hidden;
@@ -171,30 +164,32 @@
         }
         @media (max-width: 600px) {
             .country-selector {
-                position: static;
-                justify-content: flex-end;
-                margin-bottom: 20px;
+                flex-direction: column;
+                align-items: flex-end;
+            }
+            .country-selector label {
+                margin-bottom: 5px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="country-selector">
-        <label for="country">
-            <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="2" y1="12" x2="22" y2="12"></line>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-            </svg>
-            Country:
-        </label>
-        <select id="country">
-            <option value="us">US</option>
-            <option value="india">India</option>
-            <option value="south-africa">South Africa</option>
-        </select>
-    </div>
     <div class="calculator">
+        <div class="country-selector">
+            <label for="country">
+                <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="2" y1="12" x2="22" y2="12"></line>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                Country:
+            </label>
+            <select id="country">
+                <option value="us">US</option>
+                <option value="india">India</option>
+                <option value="south-africa">South Africa</option>
+            </select>
+        </div>
         <h1>LiaPlus AI ROI Calculator</h1>
         <div class="calculator-grid">
             <div class="section">
@@ -261,7 +256,6 @@
             For inquiries regarding volume discounts, please contact our customer support team at hello@liaplus.com.
         </div>
     </div>
-
     <script>
         const exchangeRates = {
             'us': 1,
@@ -385,7 +379,7 @@
                     tooltip.querySelector('.tooltiptext').style.opacity = '1';
                 });
                 tooltip.addEventListener('blur', () => {
-                    tooltip.querySelectortooltip.querySelector('.tooltiptext').style.visibility = 'hidden';
+                    tooltip.querySelector('.tooltiptext').style.visibility = 'hidden';
                     tooltip.querySelector('.tooltiptext').style.opacity = '0';
                 });
             });
